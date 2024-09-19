@@ -1,16 +1,37 @@
 import * as cdk from 'aws-cdk-lib';
+import * as aws_lambda from 'aws-cdk-lib/aws-lambda';
+
 import { Construct } from 'constructs';
-// import * as sqs from 'aws-cdk-lib/aws-sqs';
 
 export class AwsLambdaBlackboxExporterStack extends cdk.Stack {
-  constructor(scope: Construct, id: string, props?: cdk.StackProps) {
-    super(scope, id, props);
+    constructor(scope: Construct, id: string, props?: cdk.StackProps) {
+        super(scope, id, props);
 
-    // The code that defines your stack goes here
+        // We need to ensure that the binary is compatible with x86_64 architectures, as the lambda is provisioned for
+        // x86_64
+        const blackboxDownloadURL = 'https://github.com/prometheus/blackbox_exporter/releases/download/v0.25.0/blackbox_exporter-0.25.0.linux-amd64.tar.gz';
 
-    // example resource
-    // const queue = new sqs.Queue(this, 'AwsLambdaBlackboxExporterQueue', {
-    //   visibilityTimeout: cdk.Duration.seconds(300)
-    // });
-  }
+        // These are the commands that will be used to create the bundle, they will be executed at synth time
+        const code = aws_lambda.Code.fromCustomCommand('bundle/', ['./bundle.sh'], {
+            commandOptions: {
+                'env': {
+                    'BLACKBOX_DOWNLOAD_URL': blackboxDownloadURL
+                }
+            }
+        });
+
+        // This is the lambda where the blackbox exporter will be running on
+        const lambdaFunction = new aws_lambda.Function(this, 'BlackboxExporterLambda', {
+            code: code,
+            runtime: aws_lambda.Runtime.PROVIDED_AL2,
+            architecture: aws_lambda.Architecture.X86_64,
+            handler: 'doesnt-really-matter',
+            timeout: cdk.Duration.seconds(10)
+        });
+
+        // Create the function URL, so it can be invoked using an HTTP request
+        lambdaFunction.addFunctionUrl({
+            authType: aws_lambda.FunctionUrlAuthType.NONE
+        });
+    }
 }

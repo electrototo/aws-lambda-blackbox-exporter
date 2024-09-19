@@ -3,7 +3,7 @@
 Hey there! I created this repository to test the functionality of custom AWS Lambda Runtime environments. As an excercise, this
 repository is used to run [blackbox exporter](https://github.com/prometheus/blackbox_exporter) from Graphana on an AWS lambda. No modification to the source code was made (yet).
 
-This repo was created as part of my blog post [Serverless Prometheus Blackbox Exporter pt 1](#TBD), feel free to read it and if you have any question or general feedback, feel free to provide it here https://github.com/electrototo/aws-lambda-blackbox-exporter/discussions/1
+This repo was created as part of my blog post [Serverless Prometheus Blackbox Exporter pt 1](#TBD), feel free to read it and if you have any question or general feedback, feel free to provide it [on the discussions section](https://github.com/electrototo/aws-lambda-blackbox-exporter/discussions/1)
 
 ## High level overview
 

@@ -1,0 +1,24 @@
+{
+  "name": "aws-lambda-blackbox-exporter",
+  "version": "0.1.0",
+  "bin": {
+    "aws-lambda-blackbox-exporter": "bin/aws-lambda-blackbox-exporter.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "test": "jest",
+    "cdk": "cdk"
+  },
+  "devDependencies": {
+    "@types/node": "22.5.4",
+    "aws-cdk": "2.159.0",
+    "ts-node": "^10.9.2",
+    "typescript": "~5.6.2"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "2.159.0",
+    "constructs": "^10.0.0",
+    "source-map-support": "^0.5.21"
+  }
+}

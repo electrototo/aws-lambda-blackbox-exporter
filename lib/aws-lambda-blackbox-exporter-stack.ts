@@ -1,4 +1,5 @@
 import * as cdk from 'aws-cdk-lib';
+import { CfnOutput } from 'aws-cdk-lib';
 import * as aws_lambda from 'aws-cdk-lib/aws-lambda';
 
 import { Construct } from 'constructs';
@@ -30,8 +31,13 @@ export class AwsLambdaBlackboxExporterStack extends cdk.Stack {
         });
 
         // Create the function URL, so it can be invoked using an HTTP request
-        lambdaFunction.addFunctionUrl({
+        const functionURL = lambdaFunction.addFunctionUrl({
             authType: aws_lambda.FunctionUrlAuthType.NONE
+        });
+
+        new CfnOutput(this, 'LambdaEndpoint', {
+            value: functionURL.url,
+            description: 'Endpoint to invoke the lambda from'
         });
     }
 }

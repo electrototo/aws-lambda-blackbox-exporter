@@ -15,10 +15,11 @@ do
     EVENT_DATA=$(curl -sS -LD "$HEADERS" "http://${AWS_LAMBDA_RUNTIME_API}/2018-06-01/runtime/invocation/next")
 
     # 2. Parse the event, retrieving the url to be probed
-    TARGET=$(echo "$EVENT_DATA" | grep -o '"body":"[^"]*' | grep -o '[^"]*$' | base64 --decode)
+    RAW_PATH=$(echo "$EVENT_DATA" | grep -o '"rawPath":"[^"]*' | grep -o '[^"]*$')
+    QUERY_PARAMS=$(echo "$EVENT_DATA" | grep -o '"rawQueryString":"[^"]*' | grep -o '[^"]*$')
 
     # 3. Retrieve the response from blackbox exporter
-    RESPONSE=$(curl "localhost:9115/probe?target=$TARGET&module=http_2xx")
+    RESPONSE=$(curl "localhost:9115$RAW_PATH?$QUERY_PARAMS")
 
     # 4. From the file, get the request ID, so we are able to successfully comunicate the response
     REQUEST_ID=$(grep -Fi Lambda-Runtime-Aws-Request-Id "$HEADERS" | tr -d '[:space:]' | cut -d: -f2)
